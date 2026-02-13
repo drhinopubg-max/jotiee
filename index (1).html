@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>I Love You — Surprise</title>
+  <!--
+    HOW TO USE / CUSTOMIZE
+    - Change the big message: edit the <h1 id="main-msg"> text.
+    - Change the smaller message: edit the <p id="sub-msg"> text.
+    - Replace the heart image or background by editing .hero .photo background-image in CSS or the <img id="photo"> src.
+    - To change the surprise text shown after clicking the button, edit the string assigned to `surpriseText` in the <script> section.
+    - Save this file as index.html and open in any browser. Works offline.
+  -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap');
+    :root{--bg:#0f172a;--accent:#ff6178;--accent2:#ff9bb3;--glass:rgba(255,255,255,0.06)}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,-apple-system,Arial}
+    body{background:radial-gradient(circle at 10% 20%, rgba(255,97,120,0.08), transparent 15%), radial-gradient(circle at 90% 80%, rgba(255,155,179,0.06), transparent 18%), linear-gradient(180deg,#081124 0%, #081124 40%, #061020 100%);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px}
+
+    .card{width:100%;max-width:920px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:20px;padding:36px;box-shadow:0 12px 40px rgba(2,6,23,0.6);position:relative;overflow:hidden}
+
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center}
+
+    .text{padding-right:8px}
+    h1{font-size:44px;margin:0 0 8px;line-height:1.02;letter-spacing:-1px}
+    p{margin:0 0 18px;opacity:0.92}
+
+    .btn{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;padding:12px 18px;border-radius:999px;color:white;font-weight:700;cursor:pointer;font-size:15px;box-shadow:0 8px 22px rgba(255,97,120,0.14);transform:translateY(0);transition:transform .18s ease}
+    .btn:active{transform:translateY(2px)}
+
+    .photo{height:340px;border-radius:16px;background:linear-gradient(135deg, rgba(255,97,120,0.08), rgba(255,155,179,0.06));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .photo img{width:100%;height:100%;object-fit:cover}
+
+    /* floating hearts */
+    .heart{position:absolute;pointer-events:none;filter:drop-shadow(0 6px 18px rgba(255,97,120,0.12))}
+    .heart svg{width:48px;height:48px;opacity:0.12}
+
+    /* Surprise overlay */
+    .overlay{position:fixed;inset:0;background:linear-gradient(0deg, rgba(2,6,23,0.88), rgba(2,6,23,0.82));display:flex;align-items:center;justify-content:center;padding:24px;visibility:hidden;opacity:0;transition:opacity .28s ease,visibility .28s}
+    .overlay.show{visibility:visible;opacity:1}
+    .surprise{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));padding:30px;border-radius:14px;max-width:720px;width:100%;text-align:center}
+    .surprise h2{margin:0;font-size:34px}
+    .surprise p{opacity:0.95}
+    .close{margin-top:20px;display:inline-block}
+
+    /* confetti pieces */
+    .confetti{position:absolute;left:0;right:0;top:-20vh;height:120vh;pointer-events:none}
+    .piece{position:absolute;width:10px;height:18px;opacity:0;transform:translateY(-30vh) rotate(0deg);animation:drop 2.4s linear forwards}
+    @keyframes drop{to{transform:translateY(120vh) rotate(540deg);opacity:1}}
+
+    /* responsive */
+    @media (max-width:880px){.hero{grid-template-columns:1fr;grid-auto-rows:auto}.photo{height:260px}.card{padding:22px}.h1{font-size:34px}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="hero">
+      <div class="text">
+        <h1 id="main-msg">I love you — more than words</h1>
+        <p id="sub-msg">You make every ordinary day feel like magic. This little page is just a tiny piece of how I feel about you.</p>
+        <button class="btn" id="open-btn">Open your surprise ❤️</button>
+      </div>
+
+      <div class="photo" aria-hidden="true">
+        <img id="photo" src="www.facebook (6).png" alt="photo"/>
+      </div>
+    </div>
+
+    <!-- decorative hearts -->
+    <div class="heart" style="left:14%;top:8%;transform:rotate(-12deg)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7.5-4.5-9-7.5S3 5.5 7.5 4 12 7 12 7s2.5-3 4.5-3C18.5 4 21 8 21 13.5S12 21 12 21z" fill="var(--accent)"></path></svg>
+    </div>
+    <div class="heart" style="right:6%;top:36%;transform:rotate(6deg)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7.5-4.5-9-7.5S3 5.5 7.5 4 12 7 12 7s2.5-3 4.5-3C18.5 4 21 8 21 13.5S12 21 12 21z" fill="var(--accent2)"></path></svg>
+    </div>
+
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="surprise">
+      <h2 id="surprise-title">Surprise ❤️</h2>
+      <p id="surprise-text">If I had a single flower for every time I thought of you, I could walk forever in my garden.</p>
+      <div>
+        <button class="btn close" id="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    // Customize the surprise text here (or edit the #surprise-text content in HTML)
+    const surpriseText = `Every beat of my heart says your name. I love you — today, tomorrow, always.`;
+
+    const openBtn = document.getElementById('open-btn');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('close-btn');
+    const surpriseP = document.getElementById('surprise-text');
+    const confettiRoot = document.getElementById('confetti');
+
+    function playDing(){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(880, ctx.currentTime);
+        g.gain.setValueAtTime(0.0001, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.01);
+        o.connect(g); g.connect(ctx.destination); o.start();
+        o.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.28);
+        g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 1);
+        o.stop(ctx.currentTime + 1.05);
+      }catch(e){/* audio may be blocked */}
+    }
+
+    function makeConfetti(){
+      confettiRoot.innerHTML = '';
+      const colors = ['#ff6178','#ff9bb3','#ffd17a','#9be7ff'];
+      for(let i=0;i<28;i++){
+        const el = document.createElement('div');
+        el.className = 'piece';
+        el.style.left = (Math.random()*100|0) + '%';
+        el.style.background = colors[i%colors.length];
+        el.style.width = (6 + Math.random()*10|0) + 'px';
+        el.style.height = (12 + Math.random()*18|0) + 'px';
+        el.style.top = ( -20 - Math.random()*20 ) + 'vh';
+        el.style.animationDelay = (Math.random()*0.6) + 's';
+        el.style.transform = `translateY(-30vh) rotate(${Math.random()*360}deg)`;
+        confettiRoot.appendChild(el);
+      }
+    }
+
+    openBtn.addEventListener('click', ()=>{
+      surpriseP.textContent = surpriseText;
+      overlay.classList.add('show');
+      makeConfetti();
+      playDing();
+    });
+    closeBtn.addEventListener('click', ()=> overlay.classList.remove('show'));
+
+    // Optional: click overlay to close
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) overlay.classList.remove('show') });
+
+    // Small personalization: ask for name via prompt (unobtrusive)
+    (function personalize(){
+      const name = localStorage.getItem('gf_name') || '';
+      if(!name){
+        // don't force prompt; user can edit this file directly to customize
+        return;
+      }
+      document.getElementById('main-msg').textContent = `I love you, ` + name + ` ❤`;
+      document.getElementById('sub-msg').textContent = `You make every ordinary day feel like magic, ` + name + `.`;
+    })();
+  </script>
+</body>
+</html>
